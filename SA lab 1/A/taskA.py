@@ -12,7 +12,7 @@ except FileNotFoundError:
 except IOError:
     print("Помилка відкриття файлу зі словником")
     sys.exit()
-
+####
 #виведемо слова з файлу
 print(dictionary)
 
