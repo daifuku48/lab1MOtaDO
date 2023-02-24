@@ -1,0 +1,4 @@
+Party1,info about party 1
+Party2,info about party 2
+Party3,info about party 3
+Party4,info about party 4

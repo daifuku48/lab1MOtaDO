@@ -1,0 +1,6 @@
+1,Address1,Head1,Member1,Member2,Member3
+Party1:100,Party2:200,Party3:150,Party4:3
+2,Address2,Head2,Member4,Member5
+Party1:300,Party2:100,Party3:50
+3,Address3,Head3,Member6,Member7,Member8
+Party1:150,Party2:100,Party3:250
