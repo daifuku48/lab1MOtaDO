@@ -20,23 +20,15 @@ class Party:
         return self.name
 
     def add_votes(self, votes):
-        if not isinstance(votes, int):
-            raise TypeError("Votes must be an integer.")
         self.votes += votes
 
     def set_votes(self, votes):
-        if not isinstance(votes, int):
-            raise TypeError("Votes must be an integer.")
         self.votes = votes
 
     def set_name(self, name):
-        if not isinstance(name, str):
-            raise TypeError("Name must be a string.")
         self.name = name
 
     def set_info(self, info):
-        if not isinstance(info, str):
-            raise TypeError("Info must be a string.")
         self.info = info
 
     def get_percentage(self, total_votes):
@@ -54,28 +46,18 @@ class District:
         self.results = {}
 
     def set_id(self, id_):
-        if not isinstance(id_, str):
-            raise TypeError("id must be a string.")
         self.id = id_
 
     def set_address(self, address):
-        if not isinstance(address, str):
-            raise TypeError("Address must be a string.")
         self.address = address
 
     def set_head(self, head):
-        if not isinstance(head, str):
-            raise TypeError("Head must be a string.")
         self.head = head
 
     def set_members(self, members):
-        if not isinstance(members, list):
-            raise TypeError("Members must be a list.")
         self.members = members
 
     def set_results(self, results):
-        if not isinstance(results, dict):
-            raise TypeError("Results must be a dictionary.")
         self.results = results
 
     def get_id(self):
@@ -94,10 +76,6 @@ class District:
         return self.results
 
     def add_results(self, party, votes):
-        if not isinstance(party, Party):
-            raise TypeError("Party must be an instance of the Party class.")
-        if not isinstance(votes, int):
-            raise TypeError("Votes must be an integer.")
         self.results.setdefault(party, 0)
         self.results[party] += votes
 
@@ -147,76 +125,57 @@ class ElectionParty:
             print(f"An error occurred while reading the file: {str(e)}")
 
     def calculate_results(self):
-        try:
-            for district in self.districts:
-                for party, votes in district.results.items():
-                    self.total_votes += int(votes)
-                    for item_party in self.parties:
-                        if item_party.get_name() == party:
-                            item_party.add_votes(int(votes))
-            else:
-                for party in self.parties:
-                    percentage = party.get_percentage(self.total_votes)
-                    if percentage >= 0.05:
-                        print(f'{party.name}: {percentage:.2%}')
-
-        except Exception as e:
-            print(f"An error occurred while calculating the results: {str(e)}")
+        for district in self.districts:
+            for party, votes in district.results.items():
+                self.total_votes += int(votes)
+                for item_party in self.parties:
+                    if item_party.get_name() == party:
+                        item_party.add_votes(int(votes))
+        else:
+            for party in self.parties:
+                percentage = party.get_percentage(self.total_votes)
+                if percentage >= 0.05:
+                    print(f'{party.name}: {percentage:.2%}')
 
     def set_district_address(self, district_number, new_address):
-        try:
-            for district in self.districts:
-                if district.id == district_number:
-                    district.set_address(new_address)
-                    break
-            else:
-                print(f"District {district_number} not found.")
-        except Exception as e:
-            print(f"An error occurred while setting the district address: {str(e)}")
+        for district in self.districts:
+            if district.id == district_number:
+                district.set_address(new_address)
+                break
+        else:
+            print(f"District {district_number} not found.")
 
     def set_district_head(self, district_number, new_head):
-        try:
-            for district in self.districts:
-                if district.number == district_number:
-                    district.set_head(new_head)
-                    break
-            else:
-                print(f"District {district_number} not found.")
-        except Exception as e:
-            print(f"An error occurred while setting the district head: {str(e)}")
+        for district in self.districts:
+            if district.number == district_number:
+                district.set_head(new_head)
+                break
+        else:
+            print(f"District {district_number} not found.")
 
     def set_district_members(self, district_number, new_members):
-        try:
-            for district in self.districts:
-                if district.number == district_number:
-                    district.set_members(new_members)
-                    break
-            else:
-                print(f"District {district_number} not found.")
-        except Exception as e:
-            print(f"An error occurred while setting the district members: {str(e)}")
+        for district in self.districts:
+            if district.number == district_number:
+                district.set_members(new_members)
+                break
+        else:
+            print(f"District {district_number} not found.")
 
     def set_district_votes_for_party(self, district_number, party_name, new_votes):
-        try:
-            for district in self.districts:
-                if district.number == district_number:
-                    district.set_votes_for_party(party_name, new_votes)
-                    break
-            else:
-                print(f"District {district_number} not found.")
-        except Exception as e:
-            print(f"An error occurred while setting the district votes for party: {str(e)}")
+        for district in self.districts:
+            if district.number == district_number:
+                district.set_votes_for_party(party_name, new_votes)
+                break
+        else:
+            print(f"District {district_number} not found.")
 
     def set_party_name(self, party_name, new_name):
-        try:
-            for party in self.parties:
-                if party.name == party_name:
-                    party.set_name(new_name)
-                    break
-            else:
-                print(f"Party {party_name} not found.")
-        except Exception as e:
-            print(f"An error occurred while setting the party name: {str(e)}")
+        for party in self.parties:
+            if party.name == party_name:
+                party.set_name(new_name)
+                break
+        else:
+            print(f"Party {party_name} not found.")
 
 
 def main():
