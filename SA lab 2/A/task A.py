@@ -1,4 +1,3 @@
-
 def read_2d_array(path):
     try:
         count = -1
@@ -20,50 +19,25 @@ def read_2d_array(path):
         return None, None
 
 
-def max_nod(first_number, second_number):
-    try:
-        if first_number == 0:
-            return second_number
-        elif second_number == 0:
-            return first_number
-        elif first_number == second_number:
-            return first_number
-        elif first_number > second_number:
-            return max_nod(first_number - second_number, second_number)
-        else:
-            return max_nod(first_number, second_number - first_number)
-    except ValueError:
-        print("Error: Invalid input arguments.")
-        return None
+def is_mutually_prime(a, b):
+    if b == 0:
+        return a == 1
+    else:
+        return is_mutually_prime(b, a % b)
 
 
-def is_all_prime(first_number, second_number):
-    try:
-        if max_nod(round(first_number), round(second_number)) == 1:
-            print("all numbers is prime")
-        else:
-            print("numbers is not prime")
-    except TypeError:
-        print("Error: Invalid input arguments.")
+def diagonal_main_sum(matrix, index=0, total=0):
+    if index >= len(matrix):
+        return total
+    total += matrix[index][index]
+    return diagonal_main_sum(matrix, index + 1, total)
 
 
-def diagonal_sum(array, size):
-    try:
-        if size == 1:
-            return array[0][0], array[0][0]  # the only element is both on the main and secondary diagonal
-
-        sub_array = [row[1:] for row in array[1:]]  # sub-array without the first column
-        sub_size = size - 1
-
-        main_diagonal_sum, sec_diagonal_sum = diagonal_sum(sub_array, sub_size)
-
-        main_diagonal_sum += array[0][0]  # add the top-left element to the main diagonal sum
-        sec_diagonal_sum += array[0][-1]  # add the top-right element to the secondary diagonal sum
-
-        return main_diagonal_sum, sec_diagonal_sum
-    except IndexError:
-        print("Error: Invalid array dimensions.")
-        return None, None
+def diagonal_sec_sum(matrix, index=0, total=0):
+    if index >= len(matrix):
+        return total
+    total += matrix[index][len(matrix) - 1 - index]
+    return diagonal_sec_sum(matrix, index + 1, total)
 
 
 def main():
@@ -71,9 +45,11 @@ def main():
     if count is None or array is None:
         return
     write_2d_array = lambda array: print(array)
-    main_sum, sec_sum = diagonal_sum(array, count)
+    main_sum = diagonal_main_sum(array)
+    sec_sum = diagonal_sec_sum(array)
     write_2d_array(array)
-    is_all_prime(main_sum, sec_sum)
+    print(main_sum, sec_sum)
+    print(is_mutually_prime(main_sum, sec_sum))
 
 
 if __name__ == "__main__":

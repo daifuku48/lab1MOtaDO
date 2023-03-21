@@ -2,6 +2,7 @@ import string
 import sys
 from collections import deque
 # Зчитати словник з файлу та зберегти його у списку
+
 try:
     with open("dictionary.txt", "r") as f:
         # strip видаляє пробіли в кінці та початку, аналог trim()

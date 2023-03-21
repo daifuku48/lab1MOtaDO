@@ -19,9 +19,10 @@ mat.legend()
 mat.show()
 
 eps = 0.001
-
+i = 0
 L = B - A
 while L > eps:
+    i = i + 1
     x1 = A + L / 4
     xm = (A + B) / 2
     x2 = B - L / 4
@@ -36,4 +37,6 @@ while L > eps:
         B = xm
     L = B - A
 
+
 print("Мінімальний оптимум функцїї методом перетину = ", A, ",", f(A))
+print(i)
