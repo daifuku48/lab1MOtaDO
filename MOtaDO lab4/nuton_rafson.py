@@ -3,7 +3,7 @@ import matplotlib.pyplot as mat
 from scipy import optimize
 
 
-def f(param):
+def ff(param):
     return n.exp(param ** 2) - 2
 
 
@@ -12,7 +12,7 @@ def fdx(param):
 
 
 def f2dx(param):
-    return 2 * (2 * (param*param) + 1) * n.exp(param*param)
+    return 2 * (2 * (param * param) + 1) * n.exp(param * param)
 
 
 mat.xlabel("x")
@@ -40,13 +40,13 @@ while abs(x2 - x1) > eps and fdx(x2) != 0:
 print("Mетод Ньютона-Рафсона: ")
 print("Ітерації: " + str(i))
 print("X " + str(x2))
-print("Y " + str(f(x2)))
+print("Y " + str(ff(x2)))
 
 eps = 0.001
 i = 0
 R = -1
 L = 1
-z = (R+L)/2
+z = (R + L) / 2
 fz = fdx(z)
 while fdx(z) > eps:
     i = i + 1
@@ -59,13 +59,13 @@ while fdx(z) > eps:
 print("Mетод середної точки: ")
 print("Ітерації: " + str(i))
 print("X " + str(z))
-print("Y " + str(f(z)))
+print("Y " + str(ff(z)))
 
 i = 0
 R = 1
 L = -1
 
-while abs(L - R) <= eps:
+while abs(L - R) >= eps:
     i = i + 1
     L = R - (R - L) * fdx(R) / (fdx(R) - fdx(L))
     R = L + (L - R) * fdx(L) / (fdx(L) - fdx(R))
@@ -73,4 +73,4 @@ while abs(L - R) <= eps:
 print("Метод хорд")
 print("Ітерації: " + str(i))
 print("X " + str(R))
-print("Y " + str(f(R)))
+print("Y " + str(ff(R)))
