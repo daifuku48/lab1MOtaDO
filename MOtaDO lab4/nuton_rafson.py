@@ -19,9 +19,9 @@ mat.xlabel("x")
 mat.ylabel("y")
 
 x = n.linspace(-1, 1, 50)
-y = n.exp(x * x) - 2
+y = 2 * x * n.exp(x * x)
 
-mat.plot(x, y, label="у = e^x^2 - 2 [-1;1]")
+mat.plot(x, y, label="у = 2хex^2  [-1;1]")
 
 mat.grid()
 mat.legend()
