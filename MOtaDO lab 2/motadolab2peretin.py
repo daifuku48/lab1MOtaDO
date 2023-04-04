@@ -1,6 +1,6 @@
 import numpy as n
 import matplotlib.pyplot as mat
-
+import time
 
 def f(param):
     return n.exp(param * param) - 2
@@ -17,7 +17,7 @@ mat.plot(x, y, label="y = exp(x^2)-2")
 mat.grid()
 mat.legend()
 mat.show()
-
+start = time.time()
 eps = 0.001
 i = 0
 L = B - A
@@ -40,3 +40,6 @@ while L > eps:
 
 print("Мінімальний оптимум функцїї методом перетину = ", A, ",", f(A))
 print(i)
+end = time.time() - start ## собственно время работы программы
+
+print(end) ## вывод времени
