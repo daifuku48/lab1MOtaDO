@@ -36,4 +36,5 @@ while abs(B - A) > eps:
 
 midl = (A + B) * 0.5
 
-print("Мінімальний оптимум методом золотого перетину:", round(midl), round(f(midl)))
+print("Мінімальний оптимум методом золотого перетину:", midl, f(midl))
+print(i)

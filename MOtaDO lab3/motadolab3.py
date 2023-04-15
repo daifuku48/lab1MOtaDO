@@ -6,26 +6,6 @@ from scipy import optimize
 def f(param):
     return n.exp(param ** 2) - 2
 
-
-mat.xlabel("x")
-mat.ylabel("y")
-
-x = n.linspace(-1, 1, 50)
-y = n.exp(x * x) - 2
-
-mat.plot(x, y, label="у = e^x^2 - 2 [-1;1]")
-
-mat.grid()
-mat.legend()
-mat.show()
-bounds = (-1, 1)
-
-res = optimize.minimize_scalar(f, bounds=bounds, method='bounded')
-
-print("Solution with minimize_scalar: ")
-print(res)
-
-
 def a1(x1, x2):
     return (f(x2) - f(x1)) / (x2 - x1)
 

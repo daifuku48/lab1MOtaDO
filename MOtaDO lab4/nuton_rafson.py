@@ -18,7 +18,7 @@ def f2dx(param):
 mat.xlabel("x")
 mat.ylabel("y")
 
-x = n.linspace(-1, 1, 50)
+x = n.linspace(-1, 2, 50)
 y = 2 * x * n.exp(x * x)
 
 mat.plot(x, y, label="у = 2хex^2  [-1;1]")
@@ -27,7 +27,7 @@ mat.grid()
 mat.legend()
 mat.show()
 
-eps = 0.0001
+eps = 0.001
 x1 = -1
 x2 = x1 - fdx(x1) / f2dx(x1)
 i = 0
@@ -48,7 +48,7 @@ R = -1
 L = 1
 z = (R + L) / 2
 fz = fdx(z)
-while fdx(z) > eps:
+while fdx(z) >= eps:
     i = i + 1
     if fdx(z) < 0:
         L = z

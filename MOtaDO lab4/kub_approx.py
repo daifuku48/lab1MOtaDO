@@ -12,7 +12,7 @@ Z = lambda x1, x2: f1(x1) + f1(x2) - 3 * a1(x1, x2)
 delt = lambda x1, x2: np.sqrt((Z(x1, x2)) ** 2 - f1(x1) * f1(x2))
 sigm = lambda x1, x2: (Z(x1, x2) + delt(x1, x2) - f1(x1)) / (2 * delt(x1, x2) - f1(x1) + f1(x2))
 
-eps = 0.001
+eps = 0.0001
 x1 = -1
 h = 0.5
 

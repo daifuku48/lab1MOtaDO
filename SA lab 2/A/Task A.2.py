@@ -2,10 +2,8 @@ def read_2d_array(path):
     try:
         with open('2DArray.txt', 'r') as f:
             lines = f.readlines()
-            n = int(lines.pop(0))
-            lsts = list(map(lambda x: list(map(int, x.split())), lines))
-
-            return lsts
+            matrix = list(map(lambda x: list(map(int, x.split())), lines))
+            return matrix
     except IOError:
         print("Error: File not found or could not be read.")
         return None, None
