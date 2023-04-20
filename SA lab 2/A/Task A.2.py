@@ -1,12 +1,14 @@
-def read_2d_array(path):
+def read_line(path):
     try:
         with open('2DArray.txt', 'r') as f:
-            lines = f.readlines()
-            matrix = list(map(lambda x: list(map(int, x.split())), lines))
-            return matrix
+            return f.readlines()
     except IOError:
         print("Error: File not found or could not be read.")
-        return None, None
+        return None
+
+
+def read_2d_array(path):
+    return list(map(lambda x: list(map(int, x.split())), read_line(path)))
 
 
 def is_mutually_prime(a, b):
