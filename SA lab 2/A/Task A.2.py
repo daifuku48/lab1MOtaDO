@@ -1,47 +1,32 @@
-def read_line(path):
-    try:
-        with open('2DArray.txt', 'r') as f:
-            return f.readlines()
-    except IOError:
-        print("Error: File not found or could not be read.")
-        return None
+from math import gcd
 
 
 def read_2d_array(path):
-    return list(map(lambda x: list(map(int, x.split())), read_line(path)))
+    try:
+        with open(path, 'r') as f:
+            return [list(map(int, line.split())) for line in f.readlines()]
+    except IOError:
+        return None
 
 
-def is_mutually_prime(a, b):
-    if b == 0:
-        return a == 1
-    else:
-        return is_mutually_prime(b, a % b)
+def calculate_mutually_prime_sum(path):
+    return is_mutually_prime(diagonal_main_sum(read_2d_array(path)), diagonal_sec_sum(read_2d_array(path)))
 
 
-def diagonal_main_sum(matrix, index=0, total=0):
-    if index >= len(matrix):
-        return total
-    total += matrix[index][index]
-    return diagonal_main_sum(matrix, index + 1, total)
+def is_mutually_prime(first_number, second_number):
+    return gcd(first_number, second_number) == 1
 
 
-def diagonal_sec_sum(matrix, index=0, total=0):
-    if index >= len(matrix):
-        return total
-    total += matrix[index][len(matrix) - 1 - index]
-    return diagonal_sec_sum(matrix, index + 1, total)
+def diagonal_main_sum(matrix):
+    return sum(map(lambda i: matrix[i][i], range(len(matrix))))
+
+
+def diagonal_sec_sum(matrix):
+    return sum(map(lambda i: matrix[i][len(matrix) - i - 1], range(len(matrix))))
 
 
 def main():
-    array = read_2d_array("2DArray.txt")
-    if array is None:
-        return
-    write_2d_array = lambda array: print(array)
-    main_sum = diagonal_main_sum(array)
-    sec_sum = diagonal_sec_sum(array)
-    write_2d_array(array)
-    print(main_sum, sec_sum)
-    print(is_mutually_prime(main_sum, sec_sum))
+    print(calculate_mutually_prime_sum("2DArray.txt"))
 
 
 if __name__ == "__main__":

@@ -1,55 +1,45 @@
 def read_2d_array(path):
     try:
-        count = -1
         with open(path) as file:
             lines = file.readlines()
-
             array = []
             for line in lines:
-                if count == -1:
-                    count = int(line.strip())
-                    continue
-                row = line.strip().split(' ')
-                row = [float(x) for x in row]
-                array.append(row)
-
-            return count, array
+                array.append([float(x) for x in line.strip().split(' ')])
+            return array
     except IOError:
         print("Error: File not found or could not be read.")
         return None, None
 
 
-def is_mutually_prime(a, b):
-    if b == 0:
-        return a == 1
+def is_mutually_prime_numbers(path):
+    return calculate_is_mutually_prime(diagonal_main_sum(read_2d_array(path)), diagonal_sec_sum(read_2d_array(path)))
+
+
+def calculate_is_mutually_prime(first_number, second_number):
+    if second_number == 0:
+        return first_number == 1
     else:
-        return is_mutually_prime(b, a % b)
+        return calculate_is_mutually_prime(second_number, first_number % second_number)
 
 
 def diagonal_main_sum(matrix, index=0, total=0):
     if index >= len(matrix):
         return total
-    total += matrix[index][index]
-    return diagonal_main_sum(matrix, index + 1, total)
+    return diagonal_main_sum(matrix, index + 1, sum_2_numbers(total, matrix[index][index]))
 
 
 def diagonal_sec_sum(matrix, index=0, total=0):
     if index >= len(matrix):
         return total
-    total += matrix[index][len(matrix) - 1 - index]
-    return diagonal_sec_sum(matrix, index + 1, total)
+    return diagonal_sec_sum(matrix, index + 1, sum_2_numbers(total,  matrix[index][len(matrix) - 1 - index]))
+
+
+def sum_2_numbers(first_number, second_number):
+    return first_number + second_number
 
 
 def main():
-    count, array = read_2d_array("2DArray.txt")
-    if count is None or array is None:
-        return
-    write_2d_array = lambda array: print(array)
-    main_sum = diagonal_main_sum(array)
-    sec_sum = diagonal_sec_sum(array)
-    write_2d_array(array)
-    print(main_sum, sec_sum)
-    print(is_mutually_prime(main_sum, sec_sum))
+    print(is_mutually_prime_numbers("2DArray.txt"))
 
 
 if __name__ == "__main__":
