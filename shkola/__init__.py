@@ -1,11 +1,13 @@
 import pygame
 import random
 
+from pygame import Rect
+
 # Ініціалізація Pygame
 pygame.init()
 
 # Кольори
-WHITE = (255, 255, 255)
+WHITE = (0, 0, 0)
 RED = (255, 0, 0)
 
 # Розміри вікна
@@ -15,130 +17,184 @@ WINDOW_HEIGHT = 600
 # Розміри іподрому та перешкод
 TRACK_WIDTH = 800
 TRACK_HEIGHT = 400
-OBSTACLE_WIDTH = 50
-OBSTACLE_HEIGHT = 20
+OBSTACLE_WIDTH = 10
+OBSTACLE_HEIGHT = 10
 
 # Розміри фінішної прямої
 FINISH_LINE_WIDTH = 10
 FINISH_LINE_HEIGHT = TRACK_HEIGHT
 
 # Швидкість та сила кіней
-HORSE_SPEED = 3
+HORSE_SPEED = 2
 HORSE_STRENGTH = 100
 
 # Ймовірність перестрибнути перешкоду (у відсотках)
-JUMP_PROBABILITY = 10
+JUMP_PROBABILITY = 50
 
 
 # Клас коня
-class Horse(pygame.sprite.Sprite):
-    def init(self, x, y):
-        super().init()
-        self.original_image = pygame.image.load("/images/horse1.png")
-        self.image = self.original_image.copy()
+class NewHorse:
+    def __init__(self, x, y, width, height, collidersX, collidersY):
+        self.x = x
+        self.y = y
+        self.spawn_x = x
+        self.spawn_y = y
+        self.width = width
+        self.height = height
+        self.vel = 5  # скорость передвижения
+        self.is_jump = False
+        self.jump_count = 10
+        self.walk_count = 0
+        self.left = False
+        self.right = False
+        self.standing = True
+        self.jump_height = 20
+        self.is_throw = False
+        self.jump_vel = 40
+        self.walk_right = pygame.image.load("images\horse1.png")
+        self.stand = pygame.image.load("images\horse1.png")
+        self.image = self.stand
         self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
-        self.speed = HORSE_SPEED
-        self.strength = HORSE_STRENGTH
-        self.consecutive_obstacles = 0  # Лічильник поспільних перешкод
+        self.rect.x = self.x
+        self.rect.y = self.y
+        self.orientation = True
+        self.rect = self.image.get_rect()
+        self.rect.x = self.x
+        self.rect.y = self.y
+        self.win = False
+        self.collidersX = collidersX
+        self.collidersY = collidersY
 
-    def update(self):
-        self.rect.x += self.speed
-
-        # Перевірка зіткнень з перешкодами
-        obstacles_hit = pygame.sprite.spritecollide(self, obstacles, False)
-        for obstacle in obstacles_hit:
-            if self.rect.colliderect(obstacle.rect):
-                if self.rect.y + self.rect.height <= obstacle.rect.y:
-                    # Перестрибуємо перешкоду
-                    self.rect.y = obstacle.rect.y - self.rect.height
-                    self.consecutive_obstacles = 0  # Скидаємо лічильник поспільних перешкод
-                elif obstacle == self.obstacle1:
-                    # Кінь сповільнюється при зіткненні з другою перешкодою
-                    if random.randint(1, 100) <= JUMP_PROBABILITY:  # Рандомна можливість перестрибнути перешкоду
-                        self.rect.y = obstacle.rect.y - self.rect.height
-                        self.consecutive_obstacles = 0  # Скидаємо лічильник поспільних перешкод
-                    else:
-                        self.speed = max(0.5, self.speed - 0.5)
-                        self.consecutive_obstacles += 1  # Збільшуємо лічильник поспільних перешкод
-                elif obstacle == self.obstacle2:
-                    # Кінь повністю зходить з дистанції при зіткненні з третьою перешкодою
-                    self.consecutive_obstacles += 1  # Збільшуємо лічильник поспільних перешкод
-                    if self.consecutive_obstacles >= 3:
-                        self.strength = 0
-
-        if self.rect.x >= FINISH_LINE_X:
-            # Кінь досяг фінішної прямої - гра завершується
-            global winner
-            winner = self
-            pygame.event.post(pygame.event.Event(pygame.QUIT))
-
-        if self.strength <= 0:
-            # Кінь сходить з дистанції, якщо сила досягла 0
-            self.speed = 0
+    def move_right(self):
+        self.x += self.vel
 
     def jump(self):
-        # Анімація стрибка
-        jump_height = 50
-        jump_speed = 5
-        for _ in range(jump_height):
-            self.rect.y -= jump_speed
-            self.image = pygame.transform.scale(self.original_image, (30, 30))
-            pygame.time.delay(10)
-            pygame.display.flip()
-        for _ in range(jump_height):
-            self.rect.y += jump_speed
-            self.image = pygame.transform.scale(self.original_image, (30, 30))
-            pygame.time.delay(10)
-            pygame.display.flip()
+        self.is_jump = True
+
+    def jump_move(self):
+        self.y -= self.jump_vel
+        self.jump_vel -= 10
+        if self.jump_vel < -40:
+            self.is_jump = False
+            self.jump_vel = 40
+
+    def draw(self, screen):
+        screen.blit(self.image, (self.x, self.y))
+
+    def is_win(self):
+        self.win = True
+        pygame.event.post(pygame.event.Event(pygame.QUIT))
+
+    def update(self):
+        self.x += self.vel
+        if self.x == self.collidersX and self.collidersY == self.y + 20:
+            if random.randint(1, 100) <= JUMP_PROBABILITY:
+                self.is_jump = True
+            else:
+                self.vel = random.randint(1, 3)
+
+    def is_win(self):
+        self.win = True
+        pygame.event.post(pygame.event.Event(pygame.QUIT))
 
 
+class Player:
+    def __init__(self, x, y, width, height):
+        super().__init__()
+        self.x = x
+        self.y = y
+        self.spawn_x = x
+        self.spawn_y = y
+        self.width = width
+        self.height = height
+        self.vel = 10  # скорость передвижения
+        self.is_jump = False
+        self.jump_count = 10
+        self.walk_count = 0
+        self.left = False
+        self.right = False
+        self.standing = True
+        self.jump_height = 20
+        self.is_throw = False
+        self.jump_vel = 40
+        self.walk_right = pygame.image.load("images\horse1.png")
+        self.stand = pygame.image.load("images\horse1.png")
+        self.image = self.stand
+        self.rect = self.image.get_rect()
+        self.rect.x = self.x
+        self.rect.y = self.y
+        self.orientation = True
+        self.rect = self.image.get_rect()
+        self.rect.x = self.x
+        self.rect.y = self.y
+        self.win = False
 
+    def move_right(self):
+        self.x += self.vel
+
+    def jump(self):
+        self.is_jump = True
+
+    def jump_move(self):
+        self.y -= self.jump_vel
+        self.jump_vel -= 10
+        if self.jump_vel < -40:
+            self.is_jump = False
+            self.jump_vel = 40
+
+    def draw(self, screen):
+        screen.blit(self.image, (self.x, self.y))
+
+    def is_win(self):
+        self.win = True
+        pygame.event.post(pygame.event.Event(pygame.QUIT))
+
+    def check(self):
+        if self.x == 400 and self.y + 20 == 420:
+            self.vel = 1
 
 # Клас перешкоди
 class Obstacle(pygame.sprite.Sprite):
-    def init(self, x, y):
-        super().init()
-        self.original_image = pygame.image.load("obstacle.png")
+    def __init__(self, x, y):
+        super().__init__()
+        self.original_image = pygame.image.load("images/obstacle.png")
         self.image = self.original_image.copy()
-        self.rect = self.image.get_rect()
+        self.rect = Rect(x, y, OBSTACLE_WIDTH, OBSTACLE_HEIGHT)
         self.rect.x = x
         self.rect.y = y
+
+    def draw(self, screen):
+        screen.blit(self.image, (self.rect.x, self.rect.y))
 
 
 # Створення вікна
 window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("Перегони")
 
-# Створення груп спрайтів
-all_sprites = pygame.sprite.Group()
-horses = pygame.sprite.Group()
-obstacles = pygame.sprite.Group()
+player = Player(30, 420, 50, 50)
+obstaclePl = Obstacle(400, 440)
 
-# Створення коней та перешкод
-for i in range(7):
-    horse = Horse(50, i * 60 + 50)
-    all_sprites.add(horse)
-    horses.add(horse)
+horse1 = NewHorse(30, 50, 50, 50, 500, 70)
+obstacle1 = Obstacle(500, 70)
 
-    # Створення перешкод на шляху кожного коня
-    obstacle1 = Obstacle(random.randint(200, TRACK_WIDTH - 200), horse.rect.y)
-    obstacle2 = Obstacle(random.randint(200, TRACK_WIDTH - 200), horse.rect.y + 40)
-    obstacle3 = Obstacle(random.randint(200, TRACK_WIDTH - 200), horse.rect.y + 80)
-    all_sprites.add(obstacle1)
-    all_sprites.add(obstacle2)
-    all_sprites.add(obstacle3)
-    obstacles.add(obstacle1)
-    obstacles.add(obstacle2)
-    obstacles.add(obstacle3)
+horse2 = NewHorse(30, 100, 50, 50, 400, 120)
+obstacle2 = Obstacle(400, 120)
 
-    horse.obstacle1 = obstacle1
-    horse.obstacle2 = obstacle2
+horse3 = NewHorse(30, 150, 50, 50, 300, 170)
+obstacle3 = Obstacle(300, 170)
+
+horse4 = NewHorse(30, 200, 50, 50, 450, 220)
+obstacle4 = Obstacle(450, 220)
+
+horse5 = NewHorse(30, 300, 50, 50, 370, 320)
+obstacle5 = Obstacle(370, 320)
+
+horse6 = NewHorse(30, 350, 50, 50, 600, 380)
+obstacle6 = Obstacle(600, 370)
 
 # Додавання фінішної прямої
-FINISH_LINE_X = TRACK_WIDTH + 50
-finish_line_image = pygame.image.load("finish.png")
+FINISH_LINE_X = 830
+finish_line_image = pygame.image.load("images/finish.png")
 finish_line = finish_line_image.get_rect()
 finish_line.x = FINISH_LINE_X
 finish_line.height = FINISH_LINE_HEIGHT
@@ -148,25 +204,106 @@ clock = pygame.time.Clock()
 running = True
 winner = None
 while running:
+
+    keys = pygame.key.get_pressed()
+
+    if keys[pygame.K_RIGHT]:
+        player.move_right()
+
+    if keys[pygame.K_UP] and not player.is_jump:
+        player.jump()
+
+    if player.is_jump:
+        player.jump_move()
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             running = False
 
-    # Оновлення спрайтів
-    all_sprites.update()
+    if player.x == 830:
+        player.is_win()
+
+    if horse1.x == 830:
+        horse1.is_win()
+
+    if horse2.x == 830:
+        horse2.is_win()
+
+    if horse3.x == 830:
+        horse3.is_win()
+
+    if horse4.x == 830:
+        horse4.is_win()
+
+    if horse5.x == 830:
+        horse5.is_win()
+
+    if horse6.x == 830:
+        horse6.is_win()
 
     # Відображення
     window.fill((0, 128, 0))
-
-    pygame.draw.rect(window, WHITE, finish_line)  # Відображення фінішної прямої
-    all_sprites.draw(window)
+    player.draw(window)
+    pygame.draw.rect(window, WHITE, Rect(900, 0, 20, 600))  # Відображення фінішної прямої
+    obstacle1.draw(window)
+    obstaclePl.draw(window)
+    horse1.draw(window)
+    horse1.update()
+    obstacle1.draw(window)
+    horse2.draw(window)
+    horse2.update()
+    obstacle2.draw(window)
+    horse3.draw(window)
+    horse3.update()
+    obstacle3.draw(window)
+    horse4.draw(window)
+    horse4.update()
+    obstacle4.draw(window)
+    horse5.draw(window)
+    horse5.update()
+    obstacle5.draw(window)
+    horse6.draw(window)
+    horse6.update()
+    obstacle6.draw(window)
     pygame.display.flip()
 
-    clock.tick(60)
+    if horse1.is_jump:
+        horse1.jump_move()
+
+    if horse2.is_jump:
+        horse2.jump_move()
+
+    if horse3.is_jump:
+        horse3.jump_move()
+
+    if horse4.is_jump:
+        horse4.jump_move()
+
+    if horse5.is_jump:
+        horse5.jump_move()
+
+    if horse6.is_jump:
+        horse6.jump_move()
+
+    player.check()
+
+    clock.tick(20)
 
 pygame.quit()
 
-if winner is not None:
-    print("Переміг кінь номер", horses.sprites().index(winner) + 1)
+if horse1.win:
+    print("Переміг кінь номер", 1)
+elif horse2.win:
+    print("Переміг кінь номер", 2)
+elif horse3.win:
+    print("Переміг кінь номер", 3)
+elif horse4.win:
+    print("Переміг кінь номер", 4)
+elif horse5.win:
+    print("Переміг кінь номер", 5)
+elif horse6.win:
+    print("Переміг кінь номер", 6)
+elif player.win:
+    print("Переміг кінь номер", 7)

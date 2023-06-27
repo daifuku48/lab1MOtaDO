@@ -1,7 +1,7 @@
 import numpy as n
 import matplotlib.pyplot as mat
 from scipy import optimize
-
+import time
 
 def ff(param):
     return n.exp(param ** 2) - 2
@@ -26,7 +26,7 @@ mat.plot(x, y, label="у = 2хex^2  [-1;1]")
 mat.grid()
 mat.legend()
 mat.show()
-
+start_time = time.time()
 eps = 0.001
 x1 = -1
 x2 = x1 - fdx(x1) / f2dx(x1)
@@ -41,7 +41,9 @@ print("Mетод Ньютона-Рафсона: ")
 print("Ітерації: " + str(i))
 print("X " + str(x2))
 print("Y " + str(ff(x2)))
+print("--- %s seconds ---" % (time.time() - start_time))
 
+start_time = time.time()
 eps = 0.001
 i = 0
 R = -1
@@ -56,11 +58,14 @@ while fdx(z) >= eps:
         R = z
     z = (R + L) / 2
 
+
 print("Mетод середної точки: ")
 print("Ітерації: " + str(i))
 print("X " + str(z))
 print("Y " + str(ff(z)))
+print("--- %s seconds ---" % (time.time() - start_time))
 
+start_time = time.time()
 i = 0
 R = 1
 L = -1
@@ -74,3 +79,4 @@ print("Метод хорд")
 print("Ітерації: " + str(i))
 print("X " + str(R))
 print("Y " + str(ff(R)))
+print("--- %s seconds ---" % (time.time() - start_time))

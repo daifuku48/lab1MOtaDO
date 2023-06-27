@@ -1,7 +1,7 @@
 import numpy as n
 import matplotlib.pyplot as mat
 from scipy import optimize
-
+import time
 
 def f(param):
     return n.exp(param ** 2) - 2
@@ -13,7 +13,7 @@ def a1(x1, x2):
 def a2(x1, x2, x3):
     return (1 / (x3 - x2)) * (((f(x3) - f(x1)) / (x3 - x1)) - a1(x1, x2))
 
-
+start_time = time.time()
 eps = 0.001
 x1 = -1
 h = 1
@@ -68,3 +68,4 @@ if abs(xx - xmin) > eps:
 
 print("Realization")
 print(f(xx), xx, "Number of iteration:", i)
+print("--- %s seconds ---" % (time.time() - start_time))

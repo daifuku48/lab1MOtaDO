@@ -1,4 +1,5 @@
 import numpy as np
+import time
 
 x = np.arange(0.5, 2.5, 0.1)
 
@@ -12,6 +13,7 @@ Z = lambda x1, x2: f1(x1) + f1(x2) - 3 * a1(x1, x2)
 delt = lambda x1, x2: np.sqrt((Z(x1, x2)) ** 2 - f1(x1) * f1(x2))
 sigm = lambda x1, x2: (Z(x1, x2) + delt(x1, x2) - f1(x1)) / (2 * delt(x1, x2) - f1(x1) + f1(x2))
 
+start_time = time.time()
 eps = 0.5
 x1 = 0.5
 h = 0.01
@@ -57,3 +59,4 @@ print("Метод куб. аппроксимації")
 print("Ітерації: " + str(i))
 print("X " + str(xx))
 print("Y " + str(f(xx)))
+print("--- %s seconds ---" % (time.time() - start_time))

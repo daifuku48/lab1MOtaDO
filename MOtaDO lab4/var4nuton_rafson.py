@@ -1,6 +1,6 @@
 import numpy as n
 import matplotlib.pyplot as mat
-
+import time
 
 def f(x):
     return 3 * x ** 2 + 12 / x ** 3 - 5
@@ -44,12 +44,14 @@ print("Iterations:", i)
 print("X:", x1)
 print("f(X):", f(x1))
 
+
+
 # Bisection method
 a = 0.5
 b = 2.5
 eps = 0.0001
 i = 0
-
+start_time = time.time()
 while abs(b - a) >= eps:
     c = (a + b) / 2
     i += 1
@@ -64,6 +66,7 @@ print("Bisection method:")
 print("Iterations:", i)
 print("X:", c)
 print("f(X):", f(c))
+print("--- %s seconds ---" % (time.time() - start_time))
 
 # Secant method
 x0 = 0.5

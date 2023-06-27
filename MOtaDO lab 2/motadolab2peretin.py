@@ -1,11 +1,13 @@
 import numpy as n
 import matplotlib.pyplot as mat
 import time
+import time
+
 
 def f(param):
     return n.exp(param * param) - 2
 
-
+start_time = time.time()
 # інтервал перетину
 A = -1
 B = 1
@@ -40,6 +42,4 @@ while L > eps:
 
 print("Мінімальний оптимум функцїї методом перетину = ", A, ",", f(A))
 print(i)
-end = time.time() - start ## собственно время работы программы
-
-print(end) ## вывод времени
+print("--- %s seconds ---" % (time.time() - start_time))

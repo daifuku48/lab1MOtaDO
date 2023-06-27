@@ -1,11 +1,12 @@
 import numpy as n
 import matplotlib.pyplot as mat
-
+import time
 
 def f(param):
     return 3 * param**2 + (12 / (param**3)) - 5
 
 
+start_time = time.time()
 # інтервал перетину
 A = 0.5
 B = 2.5
@@ -36,3 +37,4 @@ midl = (A + B) * 0.5
 
 print("Мінімальний оптимум методом золотого перетину:", midl, f(midl))
 print("i =",i)
+print("--- %s seconds ---" % (time.time() - start_time))
